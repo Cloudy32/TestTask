@@ -20,19 +20,25 @@ def read_csv_files(file_list) -> Any:
     all_data = []
 
     for filename in file_list:
-        with open(filename, 'r', encoding='utf-8') as file:
-            reader = csv.DictReader(file)
-            # Проверяем наличие необходимых колонок
-            if 'student' not in reader.fieldnames or 'coffee_spent' not in reader.fieldnames:
-                print(f"Предупреждение: Файл {filename} не содержит необходимых колонок. Пропускаем.")
-                continue
-
-            for row in reader:
-                # Преобразуем строковое значение coffee_spent в число
-
-                    row['coffee_spent'] = float(row['coffee_spent'])
-                    all_data.append(row)
+        try:
+            with open(filename, 'r', encoding='utf-8') as file:
+                reader = csv.DictReader(file)
+                # Проверяем наличие необходимых колонок
+                if 'student' not in reader.fieldnames or 'coffee_spent' not in reader.fieldnames:
+                    print(f"Предупреждение: Файл {filename} не содержит необходимых колонок. Пропускаем.")
                     continue
+
+                for row in reader:
+                    # Преобразуем строковое значение coffee_spent в число
+
+                        row['coffee_spent'] = float(row['coffee_spent'])
+                        all_data.append(row)
+                        continue
+
+        except FileNotFoundError:
+            print(f"Ошибка: Файл {filename} не найден. Пропускаем.")
+        except Exception as e:
+            print(f"Ошибка при чтении файла {filename}: {e}. Пропускаем.")
 
     return all_data
 
